@@ -2,6 +2,7 @@ console.log('setting grammar');
 
 export default class Grammar {
 
+  // keys where the values are nodes i.e. the children
   static getChildKeys(type) {
     const nodeProperties = this.grammar[type].props;
     return Object.keys(nodeProperties).filter((key) => {
@@ -12,18 +13,19 @@ export default class Grammar {
       return true;
     });
   }
-  
+
+  // keys where the values are terminal i.e. not nodes
   static getPrimitiveKeys(type) {
     const nodeProperties = this.grammar[type].props;
     return Object.keys(nodeProperties).filter((key) => {
       const property = nodeProperties[key];
-      if (this.isPrimitive(property) || (property.kind === 'union' && property.types.every(this.isPrimitive)) || key === 'loc') {
+      if (this.isPrimitive(property) || (property.kind === 'union' && property.types.every(this.isPrimitive)) && key !== 'loc') {
         return true;
       }
       return false;
     });   
   }
-  
+ 
   static isPrimitive(property) {
     if (property.kind === 'reference') {
       return property.name === 'boolean' || property.name === 'number' || property.name === 'string' || property.name === 'RegExp' || property.name.includes('Operator');
@@ -52,6 +54,51 @@ export default class Grammar {
     });
     return grammar;
   }
+
+  static getPropertyTypes(nodeType, propertyName) {
+    const nodeData = Grammar.grammar[nodeType];
+    let property = nodeData.props[propertyName];
+    if (property.kind === 'array') {
+      property = property.base;
+    }
+
+    let types = [];
+    if (property.kind === 'union') {
+      types = types.concat(property.types)
+    } else if (property.kind === 'reference' || property.kind === 'literal') {
+      types.push(property);
+    }  else {
+      console.error('unhandled property type');
+    }
+    return types;
+
+  }
+  
+  static getNodesWithBase(base) {
+    const nodeNames = Object.keys(this.grammar).filter((nodeName) => {
+      const nodeData = grammar[nodeName];
+      return nodeData.base ? nodeData.base.includes(base) : false;
+    });
+    
+    return nodeNames.map((nodeName) => {
+      return this.createNodeObject(nodeName) 
+    });
+  }
+  
+  static createNodeObject(type) {
+    const nodeMetaData = this.grammar[type];
+    const newNode = {};
+    Object.keys(nodeMetaData.props).forEach((property) => {
+      newNode[property] = nodeMetaData.props[property].kind === 'array' ? [] : undefined;
+    });
+    newNode.type = type;
+    return newNode;
+  }
+
+  static isEditable(node, key) {
+    const nonEditableKeys = ['type', 'computed', 'sourceType'];
+    return !nonEditableKeys.includes(key);
+  }
   
   static get coreGrammar() {
     return {
@@ -76,7 +123,7 @@ export default class Grammar {
           ]
         }
       },
-      "base": []
+      "base": [] 
     },
     "SourceLocation": {
       "kind": "interface",

@@ -4,3 +4,7 @@ export async function asyncForEach(array, callback) {
     await callback(array[index], index, array);
   }
 }
+
+export function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}

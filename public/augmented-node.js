@@ -1,9 +1,22 @@
 /* global scene, grammar, THREE */
 
 import Grammar from './grammar.js';
+import TreeLayout from './tree-layout.js';
+import NodePort from './node-port.js';
+import ArrayPort from './array-port.js';
+import DataEditor from './data-editor.js';
 import './node-port.js';
 
 export default class AugmentedNode {
+
+  static get HEIGHT() {
+    return .5;
+  }
+
+  static get WIDTH() {
+    return .5;
+  }
+
   constructor(esTree, id, parent, keyInParent, index, rootPosition) {
     Grammar.expandedGrammar;
     this.id = id;
@@ -39,13 +52,11 @@ export default class AugmentedNode {
     };
     // a reusable box for setting position 
     this.boundingBox = new THREE.Box3();
-    
-    /*
-    if (parent) {
-      this.setPosition();
-    }
-    */ 
-    // this.render();   
+
+    this.ports = this.createPorts();
+
+    // Non-child attributes of the node that can be edited using the keyboard
+    this.dataEditor = new DataEditor(this);
   }
  
   get position() {
@@ -75,40 +86,20 @@ export default class AugmentedNode {
     nodeElement.setAttribute('wireframe', true);
     nodeElement.setAttribute('grab', ''); 
     nodeElement.setAttribute('class', 'augmented-node');
+    /*
     const textElement = document.createElement('a-text');
-    
+   
     textElement.setAttribute('value', this.getDataAsText());
     textElement.setAttribute('color', 'green');
+    textElement.setAttribute('width', AugmentedNode.WIDTH*2);
+    textElement.setAttribute('position', {x: -1 * AugmentedNode.WIDTH/2});
     nodeElement.appendChild(textElement);
-   
-    nodeElement.ports = {};
-    this.portSize = Math.min(this.maxPortSize, this.width/(Grammar.getChildKeys(this.type).length + 2.0));  
-    Grammar.getChildKeys(this.type).forEach((childKey, index) => {
-      let portElement;
-      const childPropertyData = Grammar.grammar[this.type].props[childKey]; 
-      if (childPropertyData.kind === 'array') {
-        portElement = this.createArrayPortElement(childKey, this[childKey], this);
-        portElement.classList.add('array-port');
-      } else {
-        portElement = this.createNodePortElement(childKey, this[childKey], this);
-      }
-      portElement.classList.add('port');
-      portElement.classList.add(childKey);
-      const portTextElement = document.createElement('a-text');
-      portTextElement.setAttribute('value', childKey);
-      portTextElement.setAttribute('color', 'yellow');
-      portElement.appendChild(portTextElement);
-      portElement.setAttribute('position', {
-        x: this.width/(Grammar.getChildKeys(this.type).length) * (index  - ((Grammar.getChildKeys(this.type).length / 2) - .5)),
-        y: this.height/2 + this.portSize/2
-      });
-
-      nodeElement.appendChild(portElement);
-      nodeElement.ports[childKey] = portElement;
-    });
-    
+    */
     this.visualRepresentation = nodeElement;
     nodeElement.dataRepresentation = this;
+
+    this.renderPorts();
+    this.dataEditor.render();
 
     if (this.parentData.node) {
       this.parentData.node.visualRepresentation.appendChild(nodeElement);
@@ -121,59 +112,63 @@ export default class AugmentedNode {
     }
 
     return new Promise((resolve, reject) => {
-      nodeElement.addEventListener('loaded', (event) => {
-        setTimeout(() => {
-                  resolve();
-        }, 50);
+         setTimeout(() => {
+                  resolve(nodeElement);
+        }, 50);     
+      // nodeElement.addEventListener('loaded', (event) => {
+        // a hack for waiting until the element has been added and is visible
+        // since loaded doesn't actually tell if the element is ready
+        // probably need to replace with mutation observers to do it "right"
+        // setTimeout(() => {
+  //                  resolve(nodeElement);
+   //     }, 50);
 
-      });
+    //  });
+    });
+  }
+
+  renderPorts() {
+    Object.values(this.ports).forEach((port, index) => {
+      port.render(this.visualRepresentation, index);
     });
   }
   
   getPortElement(key, index) {
+    let port = this.ports[key];
+    if (port instanceof ArrayPort) {
+      port = port.nodePorts[index];
+    }
+    return port.visualRepresentation;
+    /*
     const portElement = this.visualRepresentation.querySelector(`.${key}`);
     if (portElement.hasAttribute('array-port')) {
       return portElement.children[index];
     }
     return portElement;
+    */
   }
   
-  createArrayPortElement(childKey, arrayChildren, parentRepresentation) {
-    const portElement = document.createElement('a-cylinder');
-    portElement.setAttribute('array-port', '');
-    portElement.setAttribute('height', this.portSize * arrayChildren.length * 1.5 + this.portSize);
-    portElement.setAttribute('radius', this.portSize);
-    portElement.setAttribute('color', 'blue');
-    portElement.setAttribute('wireframe', true);   
-    arrayChildren.forEach((child, index) => {
-     const arrayChildElement = this.createNodePortElement(childKey, child, parentRepresentation, index);
-     arrayChildElement.setAttribute('position', {
-       y: index * this.portSize * 1.5
-     });
-
-     portElement.appendChild(arrayChildElement);
+  createPorts() {
+    const ports = {};
+    // iterate over the children of this node object
+    Grammar.getChildKeys(this.type).forEach((childKey, index) => {
+      const childPropertyData = Grammar.grammar[this.type].props[childKey];
+      let port;
+      if (childPropertyData.kind === 'array') {
+        port = new ArrayPort(this, childKey);
+      } 
+      else {
+        port = new NodePort(this, childKey, index);
+      }
+      ports[childKey] = port;
     });
-    
-    return portElement;
+
+    return ports;
   }
-  
-  createNodePortElement(childKey, child, parentRepresentation, index) {
-    const portElement = document.createElement('a-sphere');
-    portElement.setAttribute('node-port', '');
-    portElement.setAttribute('radius', this.portSize/2);
-    const color = child ? 'red' : 'green';
-    portElement.setAttribute('color', color);
-    portElement.setAttribute('wireframe', true);
-    portElement.dataRepresentation = child;
-    portElement.index = index;
-    portElement.childKey = childKey;
-    portElement.node = parentRepresentation;
-    return portElement;
-  }
-  
+ 
   setChild(newNode, childKey, childIndex) {
     // update this node
-    if (childIndex) {
+    if (Number.isInteger(childIndex)) {
       this[childKey][childIndex] = newNode;
     } else {
       this[childKey] = newNode
@@ -182,6 +177,24 @@ export default class AugmentedNode {
     newNode.parentData.node = this;
     newNode.parentData.key = childKey;
     newNode.parentData.index = childIndex;
+    // update the visuals
+    this.visualRepresentation.appendChild(newNode.visualRepresentation);
+    const portElement = this.getPortElement(childKey, childIndex);
+    portElement.dataRepresentation = newNode;
+    setTimeout(() => {
+      portElement.setAttribute('color', 'red');
+      TreeLayout.setPosition(newNode);
+      TreeLayout.addLink(newNode);
+    }, 1000);
+
+  }
+
+  setParentData(parent, keyInParent, index) {
+    this.parentData = {
+      node: parent,
+      key: keyInParent,
+      index: index
+    }
   }
   
   getDataAsText() {
@@ -190,10 +203,13 @@ export default class AugmentedNode {
     nonChildKeys.forEach((key) => {
       nonChildObject[key] = this[key];
     });
-    return JSON.stringify(nonChildObject, null, 2);
+    return JSON.stringify(nonChildObject, function(k, v) { return v === undefined ? null : v; } , 2);
   }
 
-  
+  getPropertyType(propertyName) {
+    const nodeData = Grammar.grammar[this.type];
+    return nodeData.props[propertyName].name;
+  }
   
   evaluate() {
   }

@@ -1,9 +1,11 @@
 /* global AFRAME, THREE, CollisionDetector */
-
+/* TODO change this so the event listeners are on the object and not the hand
+See triggerdown in hand controller plus for example
+*/
 AFRAME.registerComponent('grab', {
   
   init: function () {
-    console.log('grab start');
+    // console.log('grab start');
     this.primaryHand = document.getElementById("rightHand");
     this.secondaryHand = document.getElementById("leftHand");
     // this.collisionDetector = new CollisionDetector(this.el);

@@ -72,18 +72,24 @@ export default class TreeLayout {
     } else {
       node.position.x = previousNode.position.x + previousNode.width + xDelta;
     }
-   
-    if (this.isArrayChildNode(node)) {
+  
+    //TODO change this implemenation so z is dependent on the position of the port in the array
+   if (this.isArrayChildNode(node)) {
+
+      const arraySize = node.parentData.node[node.parentData.key].length;
+      node.position.z = (node.parentData.index - (arraySize - 1)/2) * (node.depth + zDelta) * -1;
       // we assume the current node is the last node in the array so far due to the
       // iteration order of tree augmentation
-      if (node.parentData.index === 0) {
+
+      /*      if (node.parentData.index === 0) {
         const arraySize = node.parentData.node[node.parentData.key].length;
         node.position.z = (arraySize - 1)/2 * (node.depth + zDelta);
       } else {
         const previousNodeInArray = node.parentData.node[node.parentData.key][node.parentData.index - 1];
         node.position.z = previousNodeInArray.position.z - previousNodeInArray.depth - zDelta; 
       }
-    } else {
+
+      */    } else {
       node.position.z = 0;
     }
   }

@@ -2,7 +2,7 @@ import AugmentedNode from './augmented-node.js';
 import * as NodeClasses from './node-classes.js';
 import Grammar from './grammar.js';
 import { walk } from 'https://cdn.jsdelivr.net/npm/estree-walker@0.6.0/src/estree-walker.js';
-import { asyncForEach } from './async-foreach.js';
+import { asyncForEach } from './async-lib.js';
 
 export default class ESTreeAugmenter {
   constructor() {
@@ -56,6 +56,7 @@ export default class ESTreeAugmenter {
     await esTreeNode.render();
     console.log(`after render ${esTreeNode.type}: ${JSON.stringify(esTreeNode.visualRepresentation.getObject3D('mesh').getWorldPosition())}`);
     const childNodes = [];
+    // try for of? https://stackoverflow.com/questions/37576685/using-async-await-with-a-foreach-loop
     await asyncForEach(Grammar.getChildKeys(esTreeNode.type), async (childKey) => {
       let child = esTreeNode[childKey];
       if (Array.isArray(child)) {

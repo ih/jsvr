@@ -8,6 +8,7 @@ import { FraserInterpreter } from './fraser-interpreter.js';
 import InterpreterController from './interpreter-controller.js';
 import Menu from './menu.js';
 import ESTreeBuilder from './estree-builder.js';
+import Grammar from './grammar.js';
 
 // TODO make this not global?
 var scene = document.querySelector('a-scene'); 
@@ -153,6 +154,8 @@ while (count <= 10) {
   // interpreter.step();
   const menu = new Menu(scene);
   const esTreeBuilder = new ESTreeBuilder();
+  
+  console.log(Grammar.getNodesWithBase('Expression'));
 }
 
 initialize();

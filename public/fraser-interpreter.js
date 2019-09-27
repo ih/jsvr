@@ -335,6 +335,8 @@ Interpreter.prototype.initGlobalScope = function(scope) {
   this.setProperty(scope, 'isFinite',
       this.createNativeFunction(isFinite, false));
 
+  this.setProperty(scope, 'console', this.createNativeFunction(console, false));
+  
   var strFunctions = [
     [escape, 'escape'], [unescape, 'unescape'],
     [decodeURI, 'decodeURI'], [decodeURIComponent, 'decodeURIComponent'],

@@ -21,6 +21,7 @@ AFRAME.registerComponent('debug-controller', {
 
     this.isPrimaryTriggerDown = false;
     this.isSecondaryTriggerDown = false;
+    this.isPrimaryGripDown = false;
     this.isHandMode = false;
 
     primaryHand = document.getElementById('rightHand');
@@ -29,6 +30,9 @@ AFRAME.registerComponent('debug-controller', {
     // TODO poll or find right event that is fired
     window.setTimeout(() => {
       console.log('model loaded');
+      // for aframe v0.9+
+      // primaryHand.object3D.visible = true;
+      // secondaryHand.object3D.visible = true;
       primaryHand.getObject3D('mesh').visible = true;
       secondaryHand.getObject3D('mesh').visible = true;
     }, 9000);
@@ -61,10 +65,10 @@ AFRAME.registerComponent('debug-controller', {
       // trigger.
       if (evt.key === 'h') {
         if (this.isPrimaryTriggerDown) {
-          primaryHand.emit('gripdown');
+          primaryHand.emit('triggerup');
           this.isPrimaryTriggerDown = false;
         } else {
-          primaryHand.emit('gripup');
+          primaryHand.emit('triggerdown');
           this.isPrimaryTriggerDown = true;
         }
         return;
@@ -72,33 +76,45 @@ AFRAME.registerComponent('debug-controller', {
       
       if (evt.key === 'f') {
         if (this.isSecondaryTriggerDown) {
-          secondaryHand.emit('gripdown');
+          secondaryHand.emit('triggerup');
           this.isSecondaryTriggerDown = false;
         } else {
-          secondaryHand.emit('gripup');
+          secondaryHand.emit('triggerdown');
           this.isSecondaryTriggerDown = true;
         }
       }
 
       // menu
       if (evt.key === 'r') {
-        secondaryHand.emit('menudown');
-        secondaryHand.emit('menuup');
+        secondaryHand.emit('xbuttondown');
+        secondaryHand.emit('xbuttonup');
       }
 
       // menu
-      if (evt.key === 'u') {
+      if (evt.key === 'y') {
         primaryHand.emit('menudown');
         primaryHand.emit('menuup');
       }
       
       if (evt.key === 'p') {
-        primaryHand.emit('systemdown');
-        primaryHand.emit('systemup');
+        if (this.isPrimaryGripDown) {
+          primaryHand.emit('gripup');
+          this.isPrimaryGripDown = false;
+        } else {
+          primaryHand.emit('gripdown');
+          this.isPrimaryGripDown = true;
+        }
+      }
+      
+      if (evt.key === ';') {
+        primaryHand.emit('abuttondown');
+        primaryHand.emit('abuttonup');
       }
 
       // Position bindings.
       const movementDelta = .05;
+      const rotationDelta = 1;
+      
       primaryPosition = primaryHand.getAttribute('position');
       if (evt.key === 'j') { primaryPosition.x -= movementDelta }  
       if (evt.key === 'k') { primaryPosition.y -= movementDelta }  
@@ -109,8 +125,8 @@ AFRAME.registerComponent('debug-controller', {
 
       // Rotation bindings.
       primaryRotation = primaryHand.getAttribute('rotation');
-      if (evt.key === 'm') { primaryRotation.x -= 10 }  // y.
-      if (evt.key === '.') { primaryRotation.x += 10 }  // o.
+      if (evt.key === 'm') { primaryRotation.x -= rotationDelta }  // y.
+      if (evt.key === '.') { primaryRotation.x += rotationDelta }  // o.
 
       secondaryPosition = secondaryHand.getAttribute('position');
       if (evt.key === 'a') { secondaryPosition.x -= movementDelta }  
@@ -122,8 +138,8 @@ AFRAME.registerComponent('debug-controller', {
 
       // Rotation bindings.
       secondaryRotation = secondaryHand.getAttribute('rotation');
-      if (evt.key === 'c') { secondaryRotation.x -= 10 }  // y.
-      if (evt.key === 'z') { secondaryRotation.x += 10 }  // o.
+      if (evt.key === 'c') { secondaryRotation.x -= rotationDelta }  // y.
+      if (evt.key === 'z') { secondaryRotation.x += rotationDelta }  // o.
 
 
       primaryHand.setAttribute('position', AFRAME.utils.clone(primaryPosition));

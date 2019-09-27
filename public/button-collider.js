@@ -5,10 +5,10 @@ AFRAME.registerComponent('button-collider', {
     console.log('init for button collider');
     
     this.primaryHand = document.getElementById('rightHand');
-    this.primaryHand.addEventListener('gripdown', () => {
+    this.primaryHand.addEventListener('triggerdown', () => {
       if (this.primaryHand.collisionDetector.isIntersecting(this.el)) {
         console.log('clicking button');
-        this.el.emit('click', {});
+        this.el.emit('click', {}, false);
       }
     });
   }
