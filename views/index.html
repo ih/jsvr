@@ -1,0 +1,56 @@
+<!-- This is a static file -->
+<!-- served from your routes in server.js -->
+
+<!-- You might want to try something fancier: -->
+<!-- html/nunjucks docs: https://mozilla.github.io/nunjucks/ -->
+<!-- pug: https://pugjs.org/ -->
+<!-- haml: http://haml.info/ -->
+<!-- hbs(handlebars): http://handlebarsjs.com/ -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>JSVR</title>
+    <meta name="description" content="A cool thing made with Glitch">
+    <link id="favicon" rel="icon" href="https://glitch.com/edit/favicon-app.ico" type="image/x-icon">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- import the webpage's stylesheet -->
+    <link rel="stylesheet" href="/style.css">
+    
+    <!-- import the webpage's client-side javascript file -->
+    <!-- script src="/client.js" type="module"></script-->
+    <script src="/tests/basic-tree.js" type="module"></script>
+    <script src="https://unpkg.com/esprima@~4.0/dist/esprima.js"></script>
+    <script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
+    <!-- script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@d0ee093046e233e39db2353852c241dd0fea4c58/dist/aframe-master.js"></script -->
+    <script src="https://cdn.jsdelivr.net/npm/cherow@1.6.9/dist/umd/cherow.min.js"></script>
+    <script src="https://rawgit.com/rdub80/aframe-gui/master/dist/aframe-gui.min.js"></script>
+    <script src="https://ih.github.io/aframe-motion-capture-components/dist/aframe-motion-capture-components.js"></script>
+    <script src="/debug-controller.js"></script>
+    <script src="/debug-hand-controller.js"></script>
+    <script src="/hand-controller-plus.js"></script> 
+    <script src="/slider-collider.js"></script>
+    <script src="/button-collider.js"></script> 
+    <script src="/collision-detector.js"></script>
+    <script src="/grab.js"></script>
+    <script src="/interpreter-controller.js" type="module"></script>   
+    <!-- script src="/node-port.js" type="module"></script -->
+    <script src="/line.js"></script>
+    <script src="/dynamic-line.js"></script>
+    <script src="https://ih.github.io/aframe-super-keyboard/dist/aframe-super-keyboard.js"></script>
+    <script src="https://unpkg.com/aframe-log-component/dist/aframe-log-component.js"></script>
+    <!-- script src="https://unpkg.com/aframe-super-keyboard@1.0.0/dist/aframe-super-keyboard.js"></script -->
+  </head>
+  <body>
+    <a-scene id="scene" avatar-recorder="autoPlay: false;saveFile: true;" debug-controller background="color:black"> <!-- -->
+      <!-- adding interpreter-controller doesn't work, probably related to how module's get loaded -->
+      <a-entity id="leftHand" hand-controls="left" oculus-touch-controls hand-controller-plus></a-entity>
+      <a-entity id="rightHand" hand-controls="right" oculus-touch-controls hand-controller-plus></a-entity>
+      <!-- a-entity dynamic-line='start:#leftHand; end:#rightHand'></a-entity -->
+      <!-- a-sphere grab color="red" wireframe="true"></a-sphere -->
+    </a-scene>
+  </body>
+</html>
