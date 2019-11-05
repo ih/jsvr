@@ -10,7 +10,9 @@ export default class Pointer {
 
   render() {
     const raycasterElement = this.parent;// document.createElement('a-entity');
-    raycasterElement.setAttribute('raycaster', 'showLine: false; enabled: false; objects: .pointable');
+    raycasterElement.setAttribute('laser-controls');
+    raycasterElement.setAttribute('raycaster', 'showLine: false; enabled: false; objects: .pointable'); //  
+    raycasterElement.setAttribute('cursor', "downEvents: triggerdown; upEvents: triggerup; fuse: false");
     // this.parent.appendChild(raycasterElement);
     this.parent.addEventListener('abuttondown', this.toggle)
     this.raycasterElement = raycasterElement;

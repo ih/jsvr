@@ -28,6 +28,24 @@ AFRAME.registerComponent('debug-controller', {
     secondaryHand = document.getElementById('leftHand');
 
     // TODO poll or find right event that is fired
+    // primaryHand.addEventListener('object3dset', (event) => {
+    //   if (event.detail.type !== 'mesh' || event.target !== primaryHand) {
+    //     return;
+    //   } else {
+    //     primaryHand.getObject3D('mesh').visible = true;
+    //   }
+    // });
+    // secondaryHand.addEventListener('object3dset', (event) => {
+    //   if (event.detail.type !== 'mesh' || event.target !== primaryHand) {
+    //     return;
+    //   } else {
+    //     secondaryHand.getObject3D('mesh').visible = true;
+    //   }
+    // });
+    // primaryHand.addEventListener('model-loaded', (event) => {
+    //   primaryHand.getObject3D('mesh').visible = true;
+    // })
+
     window.setTimeout(() => {
       console.log('model loaded');
       // for aframe v0.9+

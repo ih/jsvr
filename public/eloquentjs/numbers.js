@@ -1,11 +1,9 @@
 import ESTreeAugmenter from '../estree-augmenter.js';
 import TreeLayout from '../tree-layout.js';
 import { initializeTools } from '../toolbox.js';
-import * as Keyboard from './keyboard.js';
-import { sleep } from '../async-lib.js';
 
 async function runTest() {
-  const testProgram = `'world' + 'hello'; console.log('helllo');`;
+  const testProgram = `1;`;
 
   const testESTree = cherow.parse(testProgram);
   const initialPosition = { x:.15, y:.25, z:-.4 };

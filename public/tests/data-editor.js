@@ -23,6 +23,6 @@ async function runTest() {
   // document.querySelector('a-scene').setAttribute('avatar-replayer', 'src:https://jsvr.glitch.me/tests/data/data-editor-open.json');
 
   // open editable field set a value then re-open editable field
-  document.querySelector('a-scene').setAttribute('avatar-replayer', 'src:https://jsvr.glitch.me/tests/data/data-editor-open-set-open.json');
+  // document.querySelector('a-scene').setAttribute('avatar-replayer', 'src:https://jsvr.glitch.me/tests/data/data-editor-open-set-open.json');
 }
 runTest();

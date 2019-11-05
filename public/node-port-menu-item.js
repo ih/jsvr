@@ -39,13 +39,33 @@ export default class NodePortMenuItem {
     // and copy the 3D representation to make an icon
     this.iconElement = this.makeIcon(this.nodeElement);   
 
-    parent.appendChild(this.iconElement);
 
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(this.iconElement);
-      }, 50);
+    const promise = new Promise((resolve, reject) => {
+      // this.iconElement.addEventListener('object3dset', (event) => {
+      //   if (event.detail.type !== 'mesh' || event.target !== this.iconElement) { 
+      //     return; 
+      //   } else {
+      //     resolve(this.iconElement);
+
+      //   }
+      // });
+
+      let observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (Array.from(mutation.addedNodes).includes(this.iconElement)) {
+            resolve(this.iconElement);
+            observer.disconnect();
+          }
+        });
+      });
+      observer.observe(parent, {childList: true});
+
+      // setTimeout(() => {
+      //   resolve(this.iconElement);
+      // }, 50);
     });
+    parent.appendChild(this.iconElement);
+    return promise;
   }
   
   addNodeToAST() {

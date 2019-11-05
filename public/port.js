@@ -21,4 +21,9 @@ export default class Port {
     portTextElement.setAttribute('position', {x: Port.PORT_SIZE});
     this.visualRepresentation.appendChild(portTextElement);
   }
+
+  // abstract, implemented by children
+  isEmpty() {
+
+  }
 }

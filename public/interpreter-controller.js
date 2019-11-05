@@ -1,6 +1,7 @@
 /* global AFRAME */
 
-import Interpreter from './interpreter.js';
+// import Interpreter from './interpreter.js';
+import Interpreter from './interpreter2.js';
 
 export default class InterpreterController {
   constructor() {
@@ -44,6 +45,9 @@ export default class InterpreterController {
     button.classList.add('triggerable');
     this.toggle = this.toggle.bind(this);   
     button.addEventListener('triggerdown', () => {
+      if (!this.showMenu) {
+        return;
+      }
       this.interpreter.step();
     });
     

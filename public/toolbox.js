@@ -1,5 +1,5 @@
 import Pointer from './pointer.js';
-import VirtualKeyboard from './virtual-keyboard.js';
+import VirtualKeyboard from './virtual-keyboard2.js';
 import VirtualConsole from './virtual-console.js';
 import InterpreterController from './interpreter-controller.js';
 
@@ -15,22 +15,30 @@ export function initializeTools() {
   keyboard = new VirtualKeyboard();
   keyboard.render();
 
-  pointer = new Pointer();
-  pointer.render();
-
-  virtualConsole = new VirtualConsole();
-  virtualConsole.render();
+  initializePointer();
+  initializeVirtualConsole();
 
   interpreterController = new InterpreterController();
   interpreterController.render();
 }
+
+export function initializePointer() {
+  pointer = new Pointer();
+  pointer.render();
+}
+
+export function initializeVirtualConsole() {
+  virtualConsole = new VirtualConsole();
+  virtualConsole.render();
+}
+
 
 export function getPointer() {
   if (pointer === undefined) {
     pointer = new Pointer();
     pointer.render();
   }
-  return keyboard;
+  return pointer;
 }
 
 export function getKeyboard() {

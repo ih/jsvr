@@ -63,7 +63,7 @@ export default class ESTreeAugmenter {
         // esTreeNode[childKey] = [];
         await asyncForEach(child, async (childNode, index) => {
           const augmentedChild = await this.augmentTree(childNode, esTreeNode, childKey, index);
-          console.log(`outside constructor ${augmentedChild.type}: ${JSON.stringify(augmentedChild.visualRepresentation.getAttribute('position'))}`);         
+          // console.log(`outside constructor ${augmentedChild.type}: ${JSON.stringify(augmentedChild.visualRepresentation.getAttribute('position'))}`);         
           esTreeNode.childIdToKey[augmentedChild.id] = childKey;
           childNodes.push(augmentedChild);
           // esTreeNode[childKey].push(augmentedChild);
@@ -72,7 +72,7 @@ export default class ESTreeAugmenter {
       }
       else if (child && child.type) {
         child = await this.augmentTree(child, esTreeNode, childKey);
-        console.log(`outside constructor ${child.type}: ${JSON.stringify(child.visualRepresentation.getObject3D('mesh').getWorldPosition())}`);
+        // console.log(`outside constructor ${child.type}: ${JSON.stringify(child.visualRepresentation.getObject3D('mesh').getWorldPosition())}`);
         esTreeNode.childIdToKey[child.id] = childKey;
         childNodes.push(child);
         esTreeNode[childKey] = child;       

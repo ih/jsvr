@@ -6,7 +6,7 @@ export default class VirtualConsole {
       return function (text) {
         AFRAME.log(text);
         original(text);
-        return text;
+        // return text;
       }
     })(original);
   }

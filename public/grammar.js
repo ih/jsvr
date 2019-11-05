@@ -30,7 +30,7 @@ export default class Grammar {
     if (property.kind === 'reference') {
       return property.name === 'boolean' || property.name === 'number' || property.name === 'string' || property.name === 'RegExp' || property.name.includes('Operator');
     }
-    return property.kind === 'literal' || property.kind === 'enum';
+    return property.kind === 'literal' || property.kind === 'enum' || property.kind === 'object';
   }    
  
   static get grammar() {

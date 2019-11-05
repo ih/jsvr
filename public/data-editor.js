@@ -65,14 +65,25 @@ export default class DataEditor {
     editButton.addEventListener('triggerdown', () => {
       console.log('editing value');
       const keyboard = getKeyboard();
-      keyboard.attach(textElement);
+      keyboard.attach(textElement, () => {
+        console.log('setting a new value');
+        let newValue = keyboard.getValue();
+        if (!isNaN(Number(newValue))) {
+          newValue =  Number(newValue);
+        } 
+        textElement.setAttribute('value', newValue);
+        keyboard.hide();
+        this.node[key] = newValue;
+      });
+      /*
       keyboard.visualRepresentation.addEventListener('superkeyboardinput', () => {
         console.log('setting a new value');
-        const newValue = keyboard.visualRepresentation.getAttribute('super-keyboard').value;
+        const newValue = eval(keyboard.visualRepresentation.getAttribute('super-keyboard').value);
         textElement.setAttribute('value', newValue);
         keyboard.visualRepresentation.setAttribute('super-keyboard', 'show', false);
         this.node[key] = newValue;
       }, {once: true});
+      */
     });
 
     textElement.appendChild(editButton);

@@ -30,12 +30,19 @@ Thanks
 Made with...
 
 [Glitch](https://glitch.com)
+
 [A-Frame](https://aframe.io)
+
 [JS-Interpreter](https://github.com/NeilFraser/JS-Interpreter)
+
 [Supermedium A-Frame Keyboard](https://github.com/supermedium/aframe-super-keyboard/tree/master/dist)
+
 [Supermedium A-Frame Log](https://github.com/supermedium/superframe/tree/master/components/log)
+
 [A-Frame GUI](https://github.com/rdub80/aframe-gui)
+
 [Cherow Parser](https://github.com/cherow/cherow)
+
 -------------------
 
 \ ゜o゜)ノ
