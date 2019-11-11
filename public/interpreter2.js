@@ -95,6 +95,8 @@ export default class Interpreter {
       z: 0
     });
     targetNode.appendChild(this.visualRepresentation);
-    this.interpret(targetNode);
+    this.visualRepresentation.removeAttribute('grab');
+    this.visualRepresentation.classList.remove('grabbable');
+    this.interpret(targetNode.dataRepresentation);
   }
 }
