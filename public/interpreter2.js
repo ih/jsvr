@@ -2,10 +2,12 @@ export default class Interpreter {
   constructor() {
     this.nodeStack = [];
     this.visited = null;
+    this.primaryHand = document.getElementById("rightHand");
   }
 
   interpret(root) {
     this.root = root;
+    this.nodeStack = [];
     this.nodeStack.push(root)
     this.visited = new Set();
   }
@@ -51,7 +53,48 @@ export default class Interpreter {
     const interpreterElement = document.createElement('a-icosahedron');
     interpreterElement.setAttribute('color', 'green');
     interpreterElement.setAttribute('radius', .1);
+    interpreterElement.classList.add('pointable');
     this.visualRepresentation = interpreterElement;
     this.root.visualRepresentation.appendChild(interpreterElement);
+    // code for moving the interpreter between nodes 
+    this.visualRepresentation.addEventListener('raycaster-intersected', (event) => {
+      if (!this.isContainedInNode()) {
+        return;
+      }
+      this.detachFromNode();
+    });
+  }
+
+  isContainedInNode() {
+    return this.visualRepresentation.parentElement.classList.contains('augmented-node');
+  }
+
+  detachFromNode() {
+    // move the interpreter to your hand 
+    const newPosition = this.primaryHand.getAttribute('position');
+    this.visualRepresentation.setAttribute('position', newPosition);
+    scene.appendChild(this.visualRepresentation);
+    this.visualRepresentation.setAttribute('grab', '');
+    this.visualRepresentation.classList.add('grabbable');
+    const nodeCollisionDetector = new CollisionDetector(this.visualRepresentation);
+    this.visualRepresentation.addEventListener('gripup', () => {
+      nodeCollisionDetector.updateBounds();
+      document.querySelectorAll('.augmented-node').forEach((collidableObject) => {
+        if(nodeCollisionDetector.isIntersecting(collidableObject)) {
+          console.log('released on a node');
+          this.attachToNode(collidableObject);
+        }
+      });
+    });
+  }
+
+  attachToNode(targetNode) {
+    this.visualRepresentation.setAttribute('position', {
+      x: 0,
+      y: 0,
+      z: 0
+    });
+    targetNode.appendChild(this.visualRepresentation);
+    this.interpret(targetNode);
   }
 }

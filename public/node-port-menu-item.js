@@ -41,6 +41,8 @@ export default class NodePortMenuItem {
 
 
     const promise = new Promise((resolve, reject) => {
+      resolve(this.iconElement);
+
       // this.iconElement.addEventListener('object3dset', (event) => {
       //   if (event.detail.type !== 'mesh' || event.target !== this.iconElement) { 
       //     return; 
@@ -50,15 +52,15 @@ export default class NodePortMenuItem {
       //   }
       // });
 
-      let observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (Array.from(mutation.addedNodes).includes(this.iconElement)) {
-            resolve(this.iconElement);
-            observer.disconnect();
-          }
-        });
-      });
-      observer.observe(parent, {childList: true});
+      // let observer = new MutationObserver((mutations) => {
+      //   mutations.forEach((mutation) => {
+      //     if (Array.from(mutation.addedNodes).includes(this.iconElement)) {
+      //       resolve(this.iconElement);
+      //       observer.disconnect();
+      //     }
+      //   });
+      // });
+      // observer.observe(parent, {childList: true});
 
       // setTimeout(() => {
       //   resolve(this.iconElement);

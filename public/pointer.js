@@ -14,7 +14,7 @@ export default class Pointer {
     raycasterElement.setAttribute('raycaster', 'showLine: false; enabled: false; objects: .pointable'); //  
     raycasterElement.setAttribute('cursor', "downEvents: triggerdown; upEvents: triggerup; fuse: false");
     // this.parent.appendChild(raycasterElement);
-    this.parent.addEventListener('abuttondown', this.toggle)
+    this.parent.addEventListener('abuttondown', this.toggle);
     this.raycasterElement = raycasterElement;
   }
 

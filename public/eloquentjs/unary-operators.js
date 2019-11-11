@@ -3,7 +3,7 @@ import TreeLayout from '../tree-layout.js';
 import { initializeTools } from '../toolbox.js';
 
 async function runTest() {
-  const testProgram = `typeof 5;`;
+  const testProgram = `console.log(typeof 5);`;
 
   const testESTree = cherow.parse(testProgram);
   const initialPosition = { x:.15, y:.25, z:-.4 };

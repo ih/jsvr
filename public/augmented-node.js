@@ -6,6 +6,8 @@ import NodePort from "./node-port.js";
 import ArrayPort from "./array-port.js";
 import DataEditor from "./data-editor.js";
 import "./node-port.js";
+import './grab.js';
+
 
 export default class AugmentedNode {
   static get HEIGHT() {
@@ -83,8 +85,10 @@ export default class AugmentedNode {
     nodeElement.setAttribute("depth", this.depth);
     nodeElement.setAttribute("color", "brown");
     nodeElement.setAttribute("wireframe", true);
-    nodeElement.setAttribute("grab", "");
-    nodeElement.setAttribute("class", "augmented-node");
+    nodeElement.setAttribute("grab", ".augmented-node");
+    nodeElement.classList.add("augmented-node");
+    nodeElement.classList.add("grabbable");
+
     /*
     const textElement = document.createElement('a-text');
    
@@ -116,27 +120,40 @@ export default class AugmentedNode {
 
       //   }
       // });
-      let observer = new MutationObserver(mutations => {
-        mutations.forEach(mutation => {
-          if (Array.from(mutation.addedNodes).includes(nodeElement)) {
-            nodeElement.addEventListener("object3dset", event => {
-              // since object3dset bubbles check if the event was emitted on the nodeElement
-              if (
-                event.detail.type !== "mesh" ||
-                event.target !== nodeElement
-              ) {
-                return;
-              } else {
-                resolve(nodeElement);
-              }
-            });
 
-            // resolve(nodeElement);
-            // observer.disconnect();
-          }
-        });
+      nodeElement.addEventListener("object3dset", event => {
+        // since object3dset bubbles check if the event was emitted on the nodeElement
+        if (
+          event.detail.type !== "mesh" ||
+          event.target !== nodeElement
+        ) {
+          return;
+        } else {
+          resolve(nodeElement);
+        }
       });
-      observer.observe(parent, { childList: true });
+
+      // let observer = new MutationObserver(mutations => {
+      //   mutations.forEach(mutation => {
+      //     if (Array.from(mutation.addedNodes).includes(nodeElement)) {
+      //       nodeElement.addEventListener("object3dset", event => {
+      //         // since object3dset bubbles check if the event was emitted on the nodeElement
+      //         if (
+      //           event.detail.type !== "mesh" ||
+      //           event.target !== nodeElement
+      //         ) {
+      //           return;
+      //         } else {
+      //           resolve(nodeElement);
+      //         }
+      //       });
+
+      //       // resolve(nodeElement);
+      //       // observer.disconnect();
+      //     }
+      //   });
+      // });
+      // observer.observe(parent, { childList: true });
 
       //  setTimeout(() => {
       //           resolve(nodeElement);
@@ -247,6 +264,7 @@ export default class AugmentedNode {
     let valueElement = this.visualRepresentation.querySelector(valueSelector);
     if (!valueElement) {
       valueElement = document.createElement('a-text');
+      valueElement.setAttribute('width', this.WIDTH * 2);
       valueElement.classList.add('interpreted-value');
       this.visualRepresentation.appendChild(valueElement);
     }

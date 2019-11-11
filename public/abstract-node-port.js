@@ -49,8 +49,8 @@ export default class NodePort extends Port {
     this.primaryHand = document.getElementById("rightHand");
     this.secondaryHand = document.getElementById("leftHand");   
   
-    this.visualRepresentation.addEventListener('triggerdown', () => {
-      const grabbingHand = this.primaryHand;
+    this.visualRepresentation.addEventListener('triggerdown', (event) => {
+      const grabbingHand = event.detail.triggerHand;
       if (grabbingHand.collisionDetector.isIntersecting(this.visualRepresentation) && this.getOccupant()) {
         this.releaseNode();
       }
