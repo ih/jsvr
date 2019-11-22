@@ -2,6 +2,7 @@ import Menu from './menu.js';
 import PortMenuItem from './port-menu-item.js';
 import Grammar from './grammar.js';
 import AugmentedNode from './augmented-node.js';
+import { sleep } from './async-lib.js';
 
 export default class NodeMenu extends Menu {
   constructor(port) {

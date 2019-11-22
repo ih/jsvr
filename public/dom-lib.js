@@ -8,3 +8,10 @@ export function farthest(node, selector) {
   } while (node && (node !== current));
   return current;
 }
+
+export function setParent(targetElement, newParent) {
+  targetElement.flushToDOM(true);
+  const targetCopy = targetElement.cloneNode(true);
+  newParent.appendChild(targetCopy);
+  targetElement.parentNode.removeChild(targetElement);
+}

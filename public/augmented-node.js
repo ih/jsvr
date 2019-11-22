@@ -6,7 +6,8 @@ import NodePort from "./node-port.js";
 import ArrayPort from "./array-port.js";
 import DataEditor from "./data-editor.js";
 import "./node-port.js";
-import './grab.js';
+// import './grab.js';
+import Grab from './grab2.js';
 
 
 export default class AugmentedNode {
@@ -85,9 +86,20 @@ export default class AugmentedNode {
     nodeElement.setAttribute("depth", this.depth);
     nodeElement.setAttribute("color", "brown");
     nodeElement.setAttribute("wireframe", true);
-    nodeElement.setAttribute("grab", ".augmented-node");
+    // nodeElement.setAttribute("grab", ".augmented-node");
+    const grab = new Grab(nodeElement, '.augmented-node');
+    nodeElement.grab = grab;
     nodeElement.classList.add("augmented-node");
     nodeElement.classList.add("grabbable");
+    nodeElement.classList.add('pointable-destroy');
+
+    nodeElement.addEventListener('click', (event) => {
+      // since intersection event bubbles make sure the element is the one being pointed to
+      if (event.detail.intersection.object !== this.visualRepresentation.getObject3D('mesh')) {
+        return;
+      }
+      this.destroy();
+    });
 
     /*
     const textElement = document.createElement('a-text');
@@ -233,7 +245,12 @@ export default class AugmentedNode {
     // }, 1000);
     portElement.setAttribute("color", "red");
     TreeLayout.setPosition(newNode);
-    TreeLayout.addLink(newNode);
+    // TODO remove setTimeout, end position is not properly set
+    // maybe when appendChild happens object3d is not in right position
+    // when addLink is called
+    setTimeout(() => {
+      TreeLayout.addLink(newNode);
+    }, 10);
   }
 
   setParentData(parent, keyInParent, index) {
@@ -284,6 +301,17 @@ export default class AugmentedNode {
     return nonEmptyChildKeys.map((key) => {
       return this[key];
     });
+  }
+
+  destroy() {
+    // release from parent if it exists
+    if (this.parentData.node) {
+      const parentPort = this.parentData.node.getPortElement(this.parentData.key, this.parentData.index);
+      parentPort.dataRepresentation.releaseNode();
+    }
+    // delete node 
+    this.visualRepresentation.parentNode.removeChild(this.visualRepresentation);
+    // need to remove all event listeners for GC to happen?
   }
 
   evaluate() {}

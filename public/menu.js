@@ -24,9 +24,7 @@ export default class Menu {
     
     parent.appendChild(menuElement);
     return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(menuElement);
-      }, 50);
+      resolve(menuElement);
     });
     // return menuElement;
   }

@@ -3,6 +3,7 @@
 import AugmentedNode from './augmented-node.js';
 import NodeMenu from './node-menu.js';
 import Port from './port.js';
+import * as DOM from './dom-lib.js';
 
 // TODO Split into two classes one for a port in an array and one for not in array
 export default class NodePort extends Port {
@@ -106,6 +107,7 @@ export default class NodePort extends Port {
       z: childPosition.z
     };
     scene.appendChild(childNode.visualRepresentation);
+    // DOM.setParent(childNode.visualRepresentation, scene);
   }
 
   connectNode() {

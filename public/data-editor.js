@@ -68,9 +68,14 @@ export default class DataEditor {
       keyboard.attach(textElement, () => {
         console.log('setting a new value');
         let newValue = keyboard.getValue();
-        if (!isNaN(Number(newValue))) {
-          newValue =  Number(newValue);
-        } 
+        try {
+          newValue = JSON.parse(newValue);
+        } catch(error) {
+          
+        }
+        // if (!isNaN(Number(newValue))) {
+        //   newValue =  Number(newValue);
+        // } 
         textElement.setAttribute('value', newValue);
         keyboard.hide();
         this.node[key] = newValue;

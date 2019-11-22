@@ -1,6 +1,7 @@
 import { sleep } from './async-lib.js';
 import Grammar from './grammar.js';
 import AugmentedNode from './augmented-node.js';
+import * as DOM from './dom-lib.js';
 
 export default class NodePortMenuItem {
   constructor(nodeData, menu) {
@@ -36,12 +37,12 @@ export default class NodePortMenuItem {
     // render the node, but make it invisible
     this.nodeElement = await this.augmentedNode.render();
     this.nodeElement.setAttribute('visible', false);
-    // and copy the 3D representation to make an icon
+    // and copy the 3D representation to make an iconarent
     this.iconElement = this.makeIcon(this.nodeElement);   
 
 
     const promise = new Promise((resolve, reject) => {
-      resolve(this.iconElement);
+      // resolve(this.iconElement);
 
       // this.iconElement.addEventListener('object3dset', (event) => {
       //   if (event.detail.type !== 'mesh' || event.target !== this.iconElement) { 
@@ -61,11 +62,12 @@ export default class NodePortMenuItem {
       //   });
       // });
       // observer.observe(parent, {childList: true});
-
-      // setTimeout(() => {
-      //   resolve(this.iconElement);
-      // }, 50);
+      // TODO remove timeout...maybe by getting rid of AFRAME for managing objects
+      setTimeout(() => {
+        resolve(this.iconElement);
+      }, 1);
     });
+    // DOM.setParent(this.iconElement, parent);
     parent.appendChild(this.iconElement);
     return promise;
   }

@@ -129,6 +129,11 @@ AFRAME.registerComponent('debug-controller', {
         primaryHand.emit('abuttonup');
       }
 
+      if (evt.key === '\'') {
+        primaryHand.emit('bbuttondown');
+        primaryHand.emit('bbuttonup');
+      }
+
       // Position bindings.
       const movementDelta = .05;
       const rotationDelta = 1;

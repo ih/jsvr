@@ -1,3 +1,5 @@
+import Grab from './grab2.js';
+
 export default class Interpreter {
   constructor() {
     this.nodeStack = [];
@@ -56,6 +58,8 @@ export default class Interpreter {
     interpreterElement.classList.add('pointable');
     this.visualRepresentation = interpreterElement;
     this.root.visualRepresentation.appendChild(interpreterElement);
+    const grab = new Grab(this.visualRepresentation, '');
+    this.visualRepresentation.grab = grab;
     // code for moving the interpreter between nodes 
     this.visualRepresentation.addEventListener('raycaster-intersected', (event) => {
       if (!this.isContainedInNode()) {
@@ -74,7 +78,6 @@ export default class Interpreter {
     const newPosition = this.primaryHand.getAttribute('position');
     this.visualRepresentation.setAttribute('position', newPosition);
     scene.appendChild(this.visualRepresentation);
-    this.visualRepresentation.setAttribute('grab', '');
     this.visualRepresentation.classList.add('grabbable');
     const nodeCollisionDetector = new CollisionDetector(this.visualRepresentation);
     this.visualRepresentation.addEventListener('gripup', () => {
@@ -95,7 +98,6 @@ export default class Interpreter {
       z: 0
     });
     targetNode.appendChild(this.visualRepresentation);
-    this.visualRepresentation.removeAttribute('grab');
     this.visualRepresentation.classList.remove('grabbable');
     this.interpret(targetNode.dataRepresentation);
   }
