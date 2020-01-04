@@ -1,4 +1,4 @@
-import ArrayNodePort from './array-node-port.js';
+import ArrayNodePort from "./array-node-port.js";
 
 export default class ArrayPortAdder {
   constructor(arrayPort) {
@@ -6,22 +6,25 @@ export default class ArrayPortAdder {
   }
 
   render(arrayPortElement) {
-    const arrayPortAdderElement = document.createElement('a-cone');
+    const arrayPortAdderElement = document.createElement("a-cone");
     this.visualRepresentation = arrayPortAdderElement;
 
-    arrayPortAdderElement.setAttribute('height', ArrayNodePort.PORT_SIZE * .5);
-    arrayPortAdderElement.setAttribute('radius-bottom', ArrayNodePort.PORT_SIZE * .5);
-    arrayPortAdderElement.setAttribute('radius-top', 0);
+    arrayPortAdderElement.setAttribute("height", ArrayNodePort.PORT_SIZE * 0.5);
+    arrayPortAdderElement.setAttribute(
+      "radius-bottom",
+      ArrayNodePort.PORT_SIZE * 0.5
+    );
+    arrayPortAdderElement.setAttribute("radius-top", 0);
 
-    arrayPortAdderElement.setAttribute('color', 'yellow');
+    arrayPortAdderElement.setAttribute("color", "yellow");
 
-    arrayPortAdderElement.setAttribute('position', {
-      x: arrayPortElement.getAttribute('radius'),
-      y: arrayPortElement.getAttribute('height')
+    arrayPortAdderElement.setAttribute("position", {
+      x: arrayPortElement.getAttribute("radius"),
+      y: arrayPortElement.getAttribute("height")
     });
 
-    arrayPortAdderElement.classList.add('triggerable');
-    arrayPortAdderElement.addEventListener('triggerdown', () => {
+    arrayPortAdderElement.classList.add("triggerable");
+    arrayPortAdderElement.addEventListener("triggerdown", () => {
       this.arrayPort.addNewPort();
     });
 

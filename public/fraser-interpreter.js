@@ -24,7 +24,7 @@
  * 
  * modified by irvin.hwang@gmail.com
  */
-'use strict';
+// 'use strict';
 
 /**
  * Create a new interpreter.

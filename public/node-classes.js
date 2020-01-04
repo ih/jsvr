@@ -1,27 +1,31 @@
-import AugmentedNode from './augmented-node.js';
+import AugmentedNode from "./augmented-node.js";
+import VariableDeclaratorNode from './variable-declarator-node.js';
+import AssignmentExpressionNode from './assignment-expression-node.js';
 // import { State } from './interpreter.js';
 
 export function getNodeClass(type) {
   const nodeClassMap = {
     Program: ProgramNode,
-    VariableDeclaration: VariableDeclarationNode
+    VariableDeclaration: VariableDeclarationNode,
+    VariableDeclarator: VariableDeclaratorNode,
+    AssignmentExpression: AssignmentExpressionNode
   };
-  
+
   if (type in nodeClassMap) {
     return nodeClassMap[type];
   } else {
     return AugmentedNode;
   }
-};
+}
 
 class ProgramNode extends AugmentedNode {
   constructor(esTree, id, parent, keyInParent, index, rootPosition) {
-    console.log('Making a program node');
+    console.log("Making a program node");
     super(esTree, id, parent, keyInParent, index, rootPosition);
   }
-  
+
   execute(stack, state) {
-    console.log('executing program node');   
+    console.log("executing program node");
     const expression = this.body.shift();
     if (expression) {
       state.done = false;
@@ -33,17 +37,17 @@ class ProgramNode extends AugmentedNode {
 
 class VariableDeclarationNode extends AugmentedNode {
   constructor(esTree, id, parent, keyInParent, index, rootPosition) {
-    console.log('Making a program node');
+    console.log("Making a program node");
     super(esTree, id, parent, keyInParent, index, rootPosition);
   }
-  
+
   execute(stack, state) {
-    console.log('executing variable declaration node');
+    console.log("executing variable declaration node");
     const declarations = this.declarations;
     const n = state.n_ || 0;
     const declarationNode = declarations[n];
     if (state.init_ && declarationNode) {
-      this
+      this;
     }
   }
 }

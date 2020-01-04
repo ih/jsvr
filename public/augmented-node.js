@@ -5,10 +5,10 @@ import TreeLayout from "./tree-layout.js";
 import NodePort from "./node-port.js";
 import ArrayPort from "./array-port.js";
 import DataEditor from "./data-editor.js";
+import Interpreter from "./interpreter2.js";
 import "./node-port.js";
 // import './grab.js';
-import Grab from './grab2.js';
-
+import Grab from "./grab2.js";
 
 export default class AugmentedNode {
   static get HEIGHT() {
@@ -23,17 +23,7 @@ export default class AugmentedNode {
     Grammar.expandedGrammar;
     this.id = id;
     Object.assign(this, esTree);
-    /*
-    if (parent === null) {
-      this.position = rootPosition;
-    } else {
-      this.position = {
-        x: 0,
-        y: 0,
-        z: 0 
-      }
-    }
-    */
+
     this.scale = {
       x: null,
       y: null,
@@ -80,36 +70,28 @@ export default class AugmentedNode {
     }
     const nodeElement = document.createElement("a-box");
     nodeElement.setAttribute("position", this.position);
-    // nodeElement.setAttribute('scale', this.scale);
     nodeElement.setAttribute("height", this.height);
     nodeElement.setAttribute("width", this.width);
     nodeElement.setAttribute("depth", this.depth);
     nodeElement.setAttribute("color", "brown");
     nodeElement.setAttribute("wireframe", true);
-    // nodeElement.setAttribute("grab", ".augmented-node");
-    const grab = new Grab(nodeElement, '.augmented-node');
+    const grab = new Grab(nodeElement, ".augmented-node");
     nodeElement.grab = grab;
     nodeElement.classList.add("augmented-node");
     nodeElement.classList.add("grabbable");
-    nodeElement.classList.add('pointable-destroy');
+    nodeElement.classList.add("pointable-destroy");
 
-    nodeElement.addEventListener('click', (event) => {
+    nodeElement.addEventListener("click", event => {
       // since intersection event bubbles make sure the element is the one being pointed to
-      if (event.detail.intersection.object !== this.visualRepresentation.getObject3D('mesh')) {
+      if (
+        event.detail.intersection.object !==
+        this.visualRepresentation.getObject3D("mesh")
+      ) {
         return;
       }
       this.destroy();
     });
 
-    /*
-    const textElement = document.createElement('a-text');
-   
-    textElement.setAttribute('value', this.getDataAsText());
-    textElement.setAttribute('color', 'green');
-    textElement.setAttribute('width', AugmentedNode.WIDTH*2);
-    textElement.setAttribute('position', {x: -1 * AugmentedNode.WIDTH/2});
-    nodeElement.appendChild(textElement);
-    */
     this.visualRepresentation = nodeElement;
     nodeElement.dataRepresentation = this;
 
@@ -124,61 +106,14 @@ export default class AugmentedNode {
     }
 
     const promise = new Promise((resolve, reject) => {
-      // nodeElement.addEventListener('object3dset', (event) => {
-      //   if (event.detail.type !== 'mesh') {
-      //     return;
-      //   } else {
-      //     resolve(nodeElement);
-
-      //   }
-      // });
-
       nodeElement.addEventListener("object3dset", event => {
         // since object3dset bubbles check if the event was emitted on the nodeElement
-        if (
-          event.detail.type !== "mesh" ||
-          event.target !== nodeElement
-        ) {
+        if (event.detail.type !== "mesh" || event.target !== nodeElement) {
           return;
         } else {
           resolve(nodeElement);
         }
       });
-
-      // let observer = new MutationObserver(mutations => {
-      //   mutations.forEach(mutation => {
-      //     if (Array.from(mutation.addedNodes).includes(nodeElement)) {
-      //       nodeElement.addEventListener("object3dset", event => {
-      //         // since object3dset bubbles check if the event was emitted on the nodeElement
-      //         if (
-      //           event.detail.type !== "mesh" ||
-      //           event.target !== nodeElement
-      //         ) {
-      //           return;
-      //         } else {
-      //           resolve(nodeElement);
-      //         }
-      //       });
-
-      //       // resolve(nodeElement);
-      //       // observer.disconnect();
-      //     }
-      //   });
-      // });
-      // observer.observe(parent, { childList: true });
-
-      //  setTimeout(() => {
-      //           resolve(nodeElement);
-      // }, 50);
-      // nodeElement.addEventListener('loaded', (event) => {
-      // a hack for waiting until the element has been added and is visible
-      // since loaded doesn't actually tell if the element is ready
-      // probably need to replace with mutation observers to do it "right"
-      // setTimeout(() => {
-      //                  resolve(nodeElement);
-      //     }, 50);
-
-      //  });
     });
 
     parent.appendChild(nodeElement);
@@ -197,13 +132,6 @@ export default class AugmentedNode {
       port = port.nodePorts[index];
     }
     return port.visualRepresentation;
-    /*
-    const portElement = this.visualRepresentation.querySelector(`.${key}`);
-    if (portElement.hasAttribute('array-port')) {
-      return portElement.children[index];
-    }
-    return portElement;
-    */
   }
 
   createPorts() {
@@ -238,11 +166,6 @@ export default class AugmentedNode {
     this.visualRepresentation.appendChild(newNode.visualRepresentation);
     const portElement = this.getPortElement(childKey, childIndex);
     portElement.dataRepresentation = newNode;
-    // setTimeout(() => {
-    //   portElement.setAttribute('color', 'red');
-    //   TreeLayout.setPosition(newNode);
-    //   TreeLayout.addLink(newNode);
-    // }, 1000);
     portElement.setAttribute("color", "red");
     TreeLayout.setPosition(newNode);
     // TODO remove setTimeout, end position is not properly set
@@ -277,15 +200,15 @@ export default class AugmentedNode {
   }
 
   renderValue(value) {
-    const valueSelector = ':scope > .interpreted-value';
+    const valueSelector = ":scope > .interpreted-value";
     let valueElement = this.visualRepresentation.querySelector(valueSelector);
     if (!valueElement) {
-      valueElement = document.createElement('a-text');
-      valueElement.setAttribute('width', this.WIDTH * 2);
-      valueElement.classList.add('interpreted-value');
+      valueElement = document.createElement("a-text");
+      valueElement.setAttribute("width", this.WIDTH * 2);
+      valueElement.classList.add("interpreted-value");
       this.visualRepresentation.appendChild(valueElement);
-    }
-    valueElement.setAttribute('value', value);
+    } 
+    valueElement.setAttribute("value", value);
   }
 
   getPropertyType(propertyName) {
@@ -294,11 +217,13 @@ export default class AugmentedNode {
   }
 
   getChildren() {
-    const nonEmptyChildKeys = Grammar.getChildKeys(this.type).filter((childKey) => {
-      return this[childKey] !== null;
-    });
+    const nonEmptyChildKeys = Grammar.getChildKeys(this.type).filter(
+      childKey => {
+        return this[childKey] !== null;
+      }
+    );
 
-    return nonEmptyChildKeys.map((key) => {
+    return nonEmptyChildKeys.map(key => {
       return this[key];
     });
   }
@@ -306,13 +231,30 @@ export default class AugmentedNode {
   destroy() {
     // release from parent if it exists
     if (this.parentData.node) {
-      const parentPort = this.parentData.node.getPortElement(this.parentData.key, this.parentData.index);
+      const parentPort = this.parentData.node.getPortElement(
+        this.parentData.key,
+        this.parentData.index
+      );
       parentPort.dataRepresentation.releaseNode();
     }
-    // delete node 
+    // delete node
     this.visualRepresentation.parentNode.removeChild(this.visualRepresentation);
     // need to remove all event listeners for GC to happen?
   }
 
-  evaluate() {}
+  evaluate(environment) {
+    try {
+      const code = astring.generate(this);
+      const value = Interpreter.eval(code, environment);
+      this.renderValue(value);
+      this.evaluatedValue = value;
+      return environment;
+    } catch (error) {
+      return environment;
+    }
+  }
+
+  getEvaluatedValue() {
+    return this.evaluatedValue;
+  }
 }

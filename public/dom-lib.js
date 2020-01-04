@@ -5,7 +5,7 @@ export function farthest(node, selector) {
     if (node.parentEl) {
       node = node.parentEl.closest(selector);
     }
-  } while (node && (node !== current));
+  } while (node && node !== current);
   return current;
 }
 

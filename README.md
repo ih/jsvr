@@ -3,6 +3,8 @@ JavaScript...in VR!
 
 This project explores programming in virtual reality. Programs are represented as abstract syntax trees and you can try it at  [https://jsvr.glitch.me](https://jsvr.glitch.me) although it's currently limited to Oculus touch controls and still quite buggy/very much work in progress.
 
+You can follow the progress of the project on [twitter](https://twitter.com/IrvinHwang).
+
 
 Objects and Controls
 ------------
