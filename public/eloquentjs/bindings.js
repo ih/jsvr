@@ -5,7 +5,7 @@ import Grammar from '../grammar.js';
 
 async function runTest() {
   Grammar.buildHierarchy();
-  const testProgram = `let greeting = 'happy new ';`;
+  const testProgram = `console.log(3);`;
 
   const testESTree = cherow.parse(testProgram);
   const initialPosition = { x:.15, y:.25, z:-.4 };

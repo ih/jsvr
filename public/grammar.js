@@ -109,7 +109,7 @@ export default class Grammar {
     // then enumerate and return all the nodes in the tree
     // rooted at that node
     const nodesWithAncestry = [];
-    let traversalQueue = baseInHierarchy.children;
+    let traversalQueue = [baseInHierarchy];// baseInHierarchy.children;
     while (traversalQueue.length > 0) {
       const current = traversalQueue.shift();
       const newNode = this.createNodeObject(current.name);

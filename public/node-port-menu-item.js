@@ -1,8 +1,11 @@
 import AugmentedNode from "./augmented-node.js";
+import * as NodeClasses from './node-classes.js';
 
 export default class NodePortMenuItem {
   constructor(nodeData, menu) {
-    this.augmentedNode = new AugmentedNode(nodeData);
+    // TODO add factory method to AugmentedNode
+    const NodeClass = NodeClasses.getNodeClass(nodeData.type);
+    this.augmentedNode = new NodeClass(nodeData);
     this.menu = menu;
     this.port = menu.port;
   }
