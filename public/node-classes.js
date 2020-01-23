@@ -1,6 +1,10 @@
 import AugmentedNode from "./augmented-node.js";
 import VariableDeclaratorNode from './variable-declarator-node.js';
 import AssignmentExpressionNode from './assignment-expression-node.js';
+import IfStatementNode from './if-statement-node.js';
+import WhileStatementNode from './while-statement-node.js';
+import DoWhileStatementNode from './do-while-statement-node.js';
+
 // import { State } from './interpreter.js';
 
 export function getNodeClass(type) {
@@ -8,7 +12,10 @@ export function getNodeClass(type) {
     Program: ProgramNode,
     VariableDeclaration: VariableDeclarationNode,
     VariableDeclarator: VariableDeclaratorNode,
-    AssignmentExpression: AssignmentExpressionNode
+    AssignmentExpression: AssignmentExpressionNode,
+    IfStatement: IfStatementNode,
+    WhileStatement: WhileStatementNode,
+    DoWhileStatement: DoWhileStatementNode,
   };
 
   if (type in nodeClassMap) {

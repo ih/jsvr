@@ -228,6 +228,33 @@ export default class AugmentedNode {
     });
   }
 
+  // getChildren may return nodes or arrays of nodes
+  // this unpacks the arrays
+  getChildNodes() {
+    let childNodes = [];
+    const children = this.getChildren();
+    // don't modify the original node
+    [...children].reverse().forEach(child => {
+      if (Array.isArray(child)) {
+        [...child].reverse().forEach(arrayChild => {
+          childNodes.push(arrayChild);
+        });
+      } else {
+        childNodes.push(child);
+      }
+    });
+    return childNodes;
+  }
+
+  // used by the interpreter, may be overwritten by node sub-classes 
+  getNextChild() {
+    if (!this.visited) {
+      this.childVisitationStack = this.getChildNodes();
+    }
+    this.visited = true;
+    return this.childVisitationStack.pop()
+  }
+
   destroy() {
     // release from parent if it exists
     if (this.parentData.node) {
@@ -251,7 +278,20 @@ export default class AugmentedNode {
       return environment;
     } catch (error) {
       return environment;
-    }
+    } 
+  }
+
+  reset() {
+    this.evaluatedValue = undefined;
+    this.visited = false;
+    this.renderValue('');
+  }
+
+  resetTree() {
+    this.reset();
+    this.getChildNodes().forEach((childNode) => {
+      childNode.resetTree();
+    });
   }
 
   getEvaluatedValue() {

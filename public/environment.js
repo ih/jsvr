@@ -13,7 +13,7 @@ export default class Environment {
       bindingElement.parentNode.removeChild(bindingElement);
     });
     this.bindings = {};
-}
+  }
 
   getVariableNames() {
     return Object.keys(this.bindings);  
@@ -25,10 +25,14 @@ export default class Environment {
     });
   }
 
+  getValue(name) {
+    return this.bindings[name].getValue();
+  }
+
   async addBinding(idNode, valueNode) {
     const name = idNode.name;
     // const value = valueNode.getEvaluatedValue();
-    const binding = new Binding(idNode, valueNode);
+    const binding = new Binding(idNode, valueNode.getEvaluatedValue());
     this.bindings[name] = binding;
     await binding.render(this.visualRepresentation);
     // this.renderBinding(idNode, valueNode);

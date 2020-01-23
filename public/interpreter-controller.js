@@ -1,7 +1,7 @@
 /* global AFRAME */
 
 // import Interpreter from './interpreter.js';
-import Interpreter from './interpreter2.js';
+import Interpreter from './interpreter3.js';
 import AugmentedNode from './augmented-node.js';
 import Environment from './environment.js';
 import Grammar from './grammar.js';
@@ -101,7 +101,7 @@ export default class InterpreterController {
         } else {
           this.interpreter.step();
         }
-      }, 2000);
+      }, 1500);
     }
 
   }
