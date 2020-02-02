@@ -50,7 +50,9 @@ export default class Interpreter {
 
     // each node keeps some state of where it's at w.r.t. interpretation
     // this state is reset once the node is evaluated
-    const nextNode = current.getNextChild();
+    // some nodes such as break; or continue; may need to manipulate
+    // the stack to jump backwards in the program
+    const nextNode = current.getNextChild(this.nodeStack);
     if (!nextNode) {
       this.environment = this.evaluate(current);
     } else {

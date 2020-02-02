@@ -4,6 +4,9 @@ import AssignmentExpressionNode from './assignment-expression-node.js';
 import IfStatementNode from './if-statement-node.js';
 import WhileStatementNode from './while-statement-node.js';
 import DoWhileStatementNode from './do-while-statement-node.js';
+import ForStatementNode from './for-statement-node.js';
+import BreakStatementNode from './break-statement-node.js';
+import ContinueStatementNode from './continue-statement-node.js';
 
 // import { State } from './interpreter.js';
 
@@ -16,6 +19,9 @@ export function getNodeClass(type) {
     IfStatement: IfStatementNode,
     WhileStatement: WhileStatementNode,
     DoWhileStatement: DoWhileStatementNode,
+    ForStatement: ForStatementNode,
+    BreakStatement: BreakStatementNode,
+    ContinueStatement: ContinueStatementNode
   };
 
   if (type in nodeClassMap) {

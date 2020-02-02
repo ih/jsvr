@@ -101,7 +101,7 @@ export default class InterpreterController {
         } else {
           this.interpreter.step();
         }
-      }, 1500);
+      }, 1000);
     }
 
   }
