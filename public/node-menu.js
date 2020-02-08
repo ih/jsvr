@@ -1,7 +1,7 @@
-import Menu from './menu.js';
-import PortMenuItem from './port-menu-item.js';
-import Grammar from './grammar.js';
-import AugmentedNode from './augmented-node.js';
+import Menu from "./menu.js";
+import PortMenuItem from "./port-menu-item.js";
+import Grammar from "./grammar.js";
+import AugmentedNode from "./augmented-node.js";
 
 export default class NodeMenu extends Menu {
   constructor(port) {
@@ -9,12 +9,9 @@ export default class NodeMenu extends Menu {
     this.port = port;
     this.node = port.node;
     this.active = false;
-    this.parent = document.querySelector('#rightHand');
-    
-    // this.close = this.close.bind(this);
-    // this.open = this.open.bind(this);
+    this.parent = document.querySelector("#rightHand");
   }
-  
+
   async render() {
     // super creates this.menuElement
     super.render(this.port.visualRepresentation);
@@ -25,20 +22,20 @@ export default class NodeMenu extends Menu {
       const menuOptions = this.getMenuOptions(type);
       for (const option of menuOptions) {
         const portMenuItem = PortMenuItem.create(option, this);
-        const renderedPortMenuItem = await portMenuItem.render(this.menuElement);
+        const renderedPortMenuItem = await portMenuItem.render(
+          this.menuElement
+        );
         this.positionItem(renderedPortMenuItem);
       }
     }
   }
 
   getMenuOptions(type) {
-    if (type.kind === 'reference') {
-      return Grammar.getNodesWithBase(type.name);
+    if (type.kind === "reference") {
+      return Grammar.getNodesWithAncestry(type.name);
     } else {
-      console.error('type not supported when getting menu options');
+      console.error("type not supported when getting menu options");
       return [];
     }
   }
-
-  
 }

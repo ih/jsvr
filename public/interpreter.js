@@ -15,6 +15,7 @@ export default class Interpreter {
   }
   
   step() {
+    this.interpreter.step();
     const currentState = this.interpreter.stateStack[this.interpreter.stateStack.length - 1];   
     // const currentState = this.stateStack[this.stateStack.length - 1];
     
@@ -34,7 +35,7 @@ export default class Interpreter {
     }
     */
     
-    return this.interpreter.step();
+    // return 
   }
  
   // the initial render of the interpreter
@@ -81,7 +82,17 @@ export class AugmentedState {
     keysOfInterest.forEach((key) => {
       stateData[key] = this[key];
     });
-    return JSON.stringify(stateData, null, 2); 
+    return JSON.stringify(stateData, (key, value) => {
+      if (value === Infinity) {
+        return 'Infinity';
+      } else if (value === -Infinity) {
+        return '-Infinity';
+      } else if (Number.isNaN(value)) {
+        return 'NaN';
+      } else {
+        return value;
+      }
+    }, 2); 
   }
 }
 

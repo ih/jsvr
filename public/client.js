@@ -9,6 +9,7 @@ import InterpreterController from './interpreter-controller.js';
 import Menu from './menu.js';
 import ESTreeBuilder from './estree-builder.js';
 import Grammar from './grammar.js';
+import './grab.js';
 
 // TODO make this not global?
 var scene = document.querySelector('a-scene'); 

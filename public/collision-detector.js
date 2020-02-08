@@ -3,7 +3,7 @@
 class CollisionDetector {
   constructor(element) {
     this.element = element;
-    this.mesh = this.element.getObject3D('mesh');
+    this.mesh = this.element.getObject3D("mesh");
     // this is reused by both the element for this collider
     // as well for any element it is being checked for collisions with
     this.selfBoundingBox = new THREE.Box3();
@@ -14,13 +14,13 @@ class CollisionDetector {
   }
 
   isIntersecting(otherElement) {
-    let otherMesh = otherElement.getObject3D('mesh');
+    let otherMesh = otherElement.getObject3D("mesh");
     this.otherBoundingBox.setFromObject(otherMesh);
     return this.selfBoundingBox.intersectsBox(this.otherBoundingBox);
   }
 
   updateBounds() {
-    const mesh = this.element.getObject3D('mesh');
+    const mesh = this.element.getObject3D("mesh");
     if (!mesh) {
       return;
     }

@@ -5,7 +5,7 @@ import * as Keyboard from './keyboard.js';
 import { sleep } from '../async-lib.js';
 
 async function runTest() {
-  const testProgram = `'hello ' + 'world';`;
+  const testProgram = `'world' + 'hello'; console.log('helllo');`;
 
   const testESTree = cherow.parse(testProgram);
   const initialPosition = { x:.15, y:.25, z:-.4 };

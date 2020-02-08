@@ -3,6 +3,8 @@ JavaScript...in VR!
 
 This project explores programming in virtual reality. Programs are represented as abstract syntax trees and you can try it at  [https://jsvr.glitch.me](https://jsvr.glitch.me) although it's currently limited to Oculus touch controls and still quite buggy/very much work in progress.
 
+You can follow the progress of the project on [twitter](https://twitter.com/IrvinHwang).
+
 
 Objects and Controls
 ------------
@@ -30,12 +32,19 @@ Thanks
 Made with...
 
 [Glitch](https://glitch.com)
+
 [A-Frame](https://aframe.io)
+
 [JS-Interpreter](https://github.com/NeilFraser/JS-Interpreter)
+
 [Supermedium A-Frame Keyboard](https://github.com/supermedium/aframe-super-keyboard/tree/master/dist)
+
 [Supermedium A-Frame Log](https://github.com/supermedium/superframe/tree/master/components/log)
+
 [A-Frame GUI](https://github.com/rdub80/aframe-gui)
+
 [Cherow Parser](https://github.com/cherow/cherow)
+
 -------------------
 
 \ ゜o゜)ノ
