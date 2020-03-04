@@ -106,6 +106,16 @@ AFRAME.registerComponent("debug-controller", {
         }
       }
 
+      if (evt.key === "Tab") {
+        if (this.isSecondaryGripDown) {
+          secondaryHand.emit("gripup");
+          this.isSecondaryGripDown = false;
+        } else {
+          secondaryHand.emit("gripdown");
+          this.isSecondaryGripDown = true;
+        }
+      }
+
       if (evt.key === ";") {
         primaryHand.emit("abuttondown");
         primaryHand.emit("abuttonup");

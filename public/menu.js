@@ -1,7 +1,7 @@
 export default class Menu {
   constructor(
     initialPosition = "0 0 0",
-    initialRotation = "-90 0 0",
+    initialRotation = "0 0 0",
     width = 1,
     height = 1
   ) {

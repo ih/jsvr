@@ -4,48 +4,51 @@
 export default class Pointer {
   constructor() {
     this.active = false;
-    this.parent = document.querySelector("#rightHand");
+    this.parent = document.querySelector('#rightHand');
     this.toggle = this.toggle.bind(this);
     this.cycleMode = this.cycleMode.bind(this);
 
     // modes
     this.currentMode = 0;
+    this.modes = ['creation', 'destruction'];
   }
 
   render() {
-    const creationRayCaster = this.createRayCaster(".pointable", "green");
+    const creationRayCaster = this.createRayCaster('.pointable', 'green');
     const destructionRayCaster = this.createRayCaster(
-      ".pointable-destroy",
-      "red"
+      '.pointable-destroy',
+      'red'
     );
 
-    this.parent.addEventListener("abuttondown", this.toggle);
-    this.parent.addEventListener("bbuttondown", this.cycleMode);
+    this.parent.addEventListener('abuttondown', this.toggle);
+    this.parent.addEventListener('bbuttondown', this.cycleMode);
     this.raycasterElements = [creationRayCaster, destructionRayCaster];
     // TODO remove w/ fix to raycasters
-    this.raycasterColors = ["green", "red"];
+    this.raycasterColors = ['green', 'red'];
   }
 
   createRayCaster(selector, color) {
-    const raycasterElement = document.createElement("a-entity"); // this.parent;
-    raycasterElement.setAttribute("laser-controls");
+    const raycasterElement = document.createElement('a-entity'); // this.parent;
+    raycasterElement.setAttribute('laser-controls');
     raycasterElement.setAttribute(
-      "raycaster",
+      'raycaster',
       `showLine: false; enabled: false; objects: ${selector}`
     ); //
     raycasterElement.setAttribute(
-      "cursor",
-      "downEvents: triggerdown; upEvents: triggerup; fuse: false"
+      'cursor',
+      'downEvents: triggerdown; upEvents: triggerup; fuse: false'
     );
-    raycasterElement.setAttribute("line", `color:${color}`);
+    raycasterElement.setAttribute('line', `color:${color}`);
     this.parent.appendChild(raycasterElement);
     // since the raycaster isn't on the hand element, propagate trigger events so cursor will work
-    this.parent.addEventListener("triggerdown", event => {
-      raycasterElement.emit("triggerdown", event, false);
+    this.parent.addEventListener('triggerdown', event => {
+      raycasterElement.emit('triggerdown', event, false);
     });
-    this.parent.addEventListener("triggerup", event => {
-      raycasterElement.emit("triggerup", event, false);
+    this.parent.addEventListener('triggerup', event => {
+      raycasterElement.emit('triggerup', event, false);
     });
+
+    raycasterElement.dataRepresentation = this;
 
     return raycasterElement;
   }
@@ -53,18 +56,22 @@ export default class Pointer {
   toggle() {
     this.active = !this.active;
     const currentRaycaster = this.raycasterElements[this.currentMode];
-    currentRaycaster.setAttribute("raycaster", "showLine", this.active);
-    currentRaycaster.setAttribute("raycaster", "enabled", this.active);
+    currentRaycaster.setAttribute('raycaster', 'showLine', this.active);
+    currentRaycaster.setAttribute('raycaster', 'enabled', this.active);
     // do this b/c bug with raycaster showLine/enabled?
     currentRaycaster.setAttribute(
-      "line",
-      "color",
+      'line',
+      'color',
       this.raycasterColors[this.currentMode]
     );
   }
 
+  getMode() {
+    return this.modes[this.currentMode];
+  }
+
   cycleMode() {
-    console.log("cycling functionality");
+    console.log('cycling functionality');
     if (this.active) {
       this.toggle();
       this.currentMode = (this.currentMode + 1) % this.raycasterElements.length;

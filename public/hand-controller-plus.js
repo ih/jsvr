@@ -46,8 +46,6 @@ AFRAME.registerComponent("hand-controller-plus", {
       console.log("creating interpreter");
     });
 
-    this.el.collisionDetector = new CollisionDetector(this.el);
-
     this.el.addEventListener("triggerdown", () => {
       document.querySelectorAll(".triggerable").forEach(triggerableElement => {
         if (this.el.collisionDetector.isIntersecting(triggerableElement)) {
@@ -59,6 +57,21 @@ AFRAME.registerComponent("hand-controller-plus", {
         }
       });
     });
+
+    this.el.addEventListener("triggerup", () => {
+      document.querySelectorAll(".triggerable").forEach(triggerableElement => {
+        if (this.el.collisionDetector.isIntersecting(triggerableElement)) {
+          triggerableElement.emit(
+            "triggerup",
+            { triggerHand: this.el },
+            false
+          );
+        }
+      });
+    });
+
+    this.el.collisionDetector = new CollisionDetector(this.el);
+
   },
 
   tick: function(time, delta) {

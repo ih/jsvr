@@ -7,6 +7,8 @@ import DoWhileStatementNode from './do-while-statement-node.js';
 import ForStatementNode from './for-statement-node.js';
 import BreakStatementNode from './break-statement-node.js';
 import ContinueStatementNode from './continue-statement-node.js';
+import SwitchStatementNode from './switch-statement-node.js';
+import SwitchCaseNode from './switch-case-node.js';
 
 // import { State } from './interpreter.js';
 
@@ -21,7 +23,9 @@ export function getNodeClass(type) {
     DoWhileStatement: DoWhileStatementNode,
     ForStatement: ForStatementNode,
     BreakStatement: BreakStatementNode,
-    ContinueStatement: ContinueStatementNode
+    ContinueStatement: ContinueStatementNode,
+    SwitchStatement: SwitchStatementNode,
+    SwitchCase: SwitchCaseNode
   };
 
   if (type in nodeClassMap) {

@@ -1,14 +1,18 @@
 /* global scene, grammar, THREE */
 
-import Grammar from "./grammar.js";
-import TreeLayout from "./tree-layout.js";
-import NodePort from "./node-port.js";
-import ArrayPort from "./array-port.js";
-import DataEditor from "./data-editor.js";
-import Interpreter from "./interpreter2.js";
-import "./node-port.js";
+import Grammar from './grammar.js';
+import TreeLayout from './tree-layout.js';
+import NodePort from './node-port.js';
+import ArrayPort from './array-port.js';
+import DataEditor from './data-editor.js';
+import Interpreter from './interpreter3.js';
+import './node-port.js';
 // import './grab.js';
-import Grab from "./grab2.js";
+import Grab from './grab2.js';
+import Scale from './scale.js';
+import PointerGrab from './pointer-grab.js';
+import PointerScale from './pointer-scale.js';
+import PointerDestroy from './pointer-destroy.js';
 
 export default class AugmentedNode {
   static get HEIGHT() {
@@ -53,14 +57,14 @@ export default class AugmentedNode {
 
   get position() {
     if (this.visualRepresentation) {
-      return this.visualRepresentation.getAttribute("position");
+      return this.visualRepresentation.getAttribute('position');
     }
     return { x: 0, y: 0, z: 0 };
   }
 
   set position(newPosition) {
     if (this.visualRepresentation) {
-      this.visualRepresentation.setAttribute("position", newPosition);
+      this.visualRepresentation.setAttribute('position', newPosition);
     }
   }
 
@@ -68,29 +72,39 @@ export default class AugmentedNode {
     if (this.visualRepresentation) {
       this.visualRepresentation.remove();
     }
-    const nodeElement = document.createElement("a-box");
-    nodeElement.setAttribute("position", this.position);
-    nodeElement.setAttribute("height", this.height);
-    nodeElement.setAttribute("width", this.width);
-    nodeElement.setAttribute("depth", this.depth);
-    nodeElement.setAttribute("color", "brown");
-    nodeElement.setAttribute("wireframe", true);
-    const grab = new Grab(nodeElement, ".augmented-node");
+    const nodeElement = document.createElement('a-box');
+    nodeElement.setAttribute('position', this.position);
+    nodeElement.setAttribute('height', this.height);
+    nodeElement.setAttribute('width', this.width);
+    nodeElement.setAttribute('depth', this.depth);
+    nodeElement.setAttribute('color', 'brown');
+    nodeElement.setAttribute('wireframe', true);
+    const grab = new Grab(nodeElement, '.augmented-node');
     nodeElement.grab = grab;
-    nodeElement.classList.add("augmented-node");
-    nodeElement.classList.add("grabbable");
-    nodeElement.classList.add("pointable-destroy");
+    const scale = new Scale(nodeElement, '.augmented-node');
+    nodeElement.scale = scale;
+    const pointerGrab = new PointerGrab(nodeElement, '.augmented-node');
+    nodeElement.pointerGrab = pointerGrab; 
+    const pointerDestroy = new PointerDestroy(nodeElement);
+    nodeElement.pointerDestory = pointerDestroy;
+    const pointerScale = new PointerScale(nodeElement, '.augmented-node');
+    nodeElement.pointerScale = pointerScale;
+    nodeElement.classList.add('augmented-node');
+    nodeElement.classList.add('grabbable');
+    // TODO 
+    nodeElement.classList.add('triggerable');
+    // nodeElement.classList.add('pointable-destroy');
 
-    nodeElement.addEventListener("click", event => {
-      // since intersection event bubbles make sure the element is the one being pointed to
-      if (
-        event.detail.intersection.object !==
-        this.visualRepresentation.getObject3D("mesh")
-      ) {
-        return;
-      }
-      this.destroy();
-    });
+    // nodeElement.addEventListener('click', event => {
+    //   // since intersection event bubbles make sure the element is the one being pointed to
+    //   if (
+    //     event.detail.intersection.object !==
+    //     this.visualRepresentation.getObject3D('mesh')
+    //   ) {
+    //     return;
+    //   }
+    //   this.destroy();
+    // });
 
     this.visualRepresentation = nodeElement;
     nodeElement.dataRepresentation = this;
@@ -106,9 +120,9 @@ export default class AugmentedNode {
     }
 
     const promise = new Promise((resolve, reject) => {
-      nodeElement.addEventListener("object3dset", event => {
+      nodeElement.addEventListener('object3dset', event => {
         // since object3dset bubbles check if the event was emitted on the nodeElement
-        if (event.detail.type !== "mesh" || event.target !== nodeElement) {
+        if (event.detail.type !== 'mesh' || event.target !== nodeElement) {
           return;
         } else {
           resolve(nodeElement);
@@ -140,7 +154,7 @@ export default class AugmentedNode {
     Grammar.getChildKeys(this.type).forEach((childKey, index) => {
       const childPropertyData = Grammar.grammar[this.type].props[childKey];
       let port;
-      if (childPropertyData.kind === "array") {
+      if (childPropertyData.kind === 'array') {
         port = new ArrayPort(this, childKey);
       } else {
         port = new NodePort(this, childKey, index);
@@ -166,7 +180,7 @@ export default class AugmentedNode {
     this.visualRepresentation.appendChild(newNode.visualRepresentation);
     const portElement = this.getPortElement(childKey, childIndex);
     portElement.dataRepresentation = newNode;
-    portElement.setAttribute("color", "red");
+    portElement.setAttribute('color', 'red');
     TreeLayout.setPosition(newNode);
     // TODO remove setTimeout, end position is not properly set
     // maybe when appendChild happens object3d is not in right position
@@ -200,15 +214,15 @@ export default class AugmentedNode {
   }
 
   renderValue(value) {
-    const valueSelector = ":scope > .interpreted-value";
+    const valueSelector = ':scope > .interpreted-value';
     let valueElement = this.visualRepresentation.querySelector(valueSelector);
     if (!valueElement) {
-      valueElement = document.createElement("a-text");
-      valueElement.setAttribute("width", this.WIDTH * 2);
-      valueElement.classList.add("interpreted-value");
+      valueElement = document.createElement('a-text');
+      valueElement.setAttribute('width', this.WIDTH * 2);
+      valueElement.classList.add('interpreted-value');
       this.visualRepresentation.appendChild(valueElement);
-    } 
-    valueElement.setAttribute("value", value);
+    }
+    valueElement.setAttribute('value', value);
   }
 
   getPropertyType(propertyName) {
@@ -219,13 +233,17 @@ export default class AugmentedNode {
   getChildren() {
     const nonEmptyChildKeys = Grammar.getChildKeys(this.type).filter(
       childKey => {
-        return this[childKey] !== null;
+        return this[childKey] !== null && this[childKey] !== undefined;
       }
     );
 
     return nonEmptyChildKeys.map(key => {
       return this[key];
     });
+  }
+
+  getParent() {
+    return this.parentData.node;
   }
 
   // getChildren may return nodes or arrays of nodes
@@ -237,7 +255,9 @@ export default class AugmentedNode {
     [...children].reverse().forEach(child => {
       if (Array.isArray(child)) {
         [...child].reverse().forEach(arrayChild => {
-          childNodes.push(arrayChild);
+          if (arrayChild !== null) {
+            childNodes.push(arrayChild);
+          }
         });
       } else {
         childNodes.push(child);
@@ -246,13 +266,13 @@ export default class AugmentedNode {
     return childNodes;
   }
 
-  // used by the interpreter, may be overwritten by node sub-classes 
+  // used by the interpreter, may be overwritten by node sub-classes
   getNextChild() {
     if (!this.visited) {
       this.childVisitationStack = this.getChildNodes();
     }
     this.visited = true;
-    return this.childVisitationStack.pop()
+    return this.childVisitationStack.pop();
   }
 
   destroy() {
@@ -278,7 +298,7 @@ export default class AugmentedNode {
       return environment;
     } catch (error) {
       return environment;
-    } 
+    }
   }
 
   reset() {
@@ -289,7 +309,7 @@ export default class AugmentedNode {
 
   resetTree() {
     this.reset();
-    this.getChildNodes().forEach((childNode) => {
+    this.getChildNodes().forEach(childNode => {
       childNode.resetTree();
     });
   }

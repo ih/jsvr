@@ -10,18 +10,30 @@ AFRAME.registerComponent('grab', {
   
   init: function () {
     this.deltaPosition = null;
+    this.leftHand = document.getElementById('leftHand');
+    this.rightHand = document.getElementById('rightHand');
+
     this.el.addEventListener('gripdown', (event) => {
       this.grabbingHand = event.detail.grabbingHand;       
       this.gripping = true; 
       this.deltaPosition = null;
     });
-    
-    this.el.addEventListener('gripup', () => {
-      this.grabbingHand = null;
-      this.gripping = false;
-      this.deltaPosition = null;
-    });
+
+    this.leftHand.addEventListener('gripup', this.release);
+    this.rightHand.addEventListener('gripup', this.release);
+   
+    // this.el.addEventListener('gripup', () => {
+    //   this.grabbingHand = null;
+    //   this.gripping = false;
+    //   this.deltaPosition = null;
+    // });
   },
+
+  release: function() {
+    this.grabbingHand = null;
+    this.gripping = false;
+    this.deltaPosition = null;
+  }
   
   tick: function (time, delta) {
     if (!this.gripping) {
