@@ -5,6 +5,9 @@ This project explores programming in virtual reality. Programs are represented a
 
 You can follow the progress of the project on [twitter](https://twitter.com/IrvinHwang).
 
+(Update 2024-01-12)
+The links above no longer work, but you can see a few videos of the system in action [here](https://www.youtube.com/watch?v=bSWAeEk0_Ho) and [here](https://www.youtube.com/watch?v=VVKkvxDOQBg)
+
 
 Objects and Controls
 ------------
